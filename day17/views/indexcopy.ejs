@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title><%= sampleData.title || 'Calendar' %></title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+    />
+  </head>
+  <body>
+    <div class="mx-auto">
+      <div class="bg-blue-800 text-white overflow-hidden shadow-lg">
+        <h2 class="p-3 font-bold text-xl">
+          <%= sampleData.header || 'Calendar' %>
+        </h2>
+        <div class="font-bold text-xl mb-2"></div>
+      </div>
+      <div class="mx-20 py-4">
+        <p class="font-bold">Pick a date and time</p>
+        <p class="font-bold mt-1">
+          Duration: <%= sampleData.duration || '1 hour' %>
+        </p>
+        <p class="font-medium my-3">
+          Your timezone:
+          <span
+            onclick="openModal()"
+            id="timezoneSpan"
+            class="font-normal cursor-pointer"
+            ><%= sampleData.timezone || 'please select' %></span
+          >
+        </p>
+        <hr />
+
+        <div id="scheduleContainer">
+          <div
+            class="flex justify-between hidden items-center mt-4 mb-2"
+            id="switch"
+          >
+            <span id="prevWeek" class="font-medium text-sm cursor-pointer"
+              >Prev week</span
+            >
+            <span id="nextWeek" class="font-medium text-sm cursor-pointer"
+              >Next week</span
+            >
+          </div>
+          <table id="scheduleTable" class="hidden mb-4 mt-0 w-full text-black">
+            <thead>
+              <tr class="table-fixed bg-gray-100 h-20"></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+        <form
+          id="scheduleForm"
+          class="hidden my-4 w-full"
+          onsubmit="return handleSubmit(event)"
+        >
+          <h1 class="font-bold mt-10 mb-2">Additional information</h1>
+          <h2 class="font-medium mt-2 mb-1">Full Name</h2>
+          <input
+            type="text"
+            class="w-3/4 border border-black p-1 mb-2 border-2"
+            placeholder="Full Name"
+            required
+          />
+          <h2 class="font-medium mt-2 mb-1">Email</h2>
+          <input
+            type="text"
+            class="w-3/4 border border-black p-1 mb-2 border-2"
+            placeholder="Email"
+            required
+          />
+          <h2 class="font-medium mt-2 mb-1">Company</h2>
+          <input
+            type="text"
+            class="w-3/4 border border-black p-1 mb-2 border-2"
+            placeholder="Company"
+            required
+          />
+          <h2 class="font-medium mt-2 mb-1">Phone</h2>
+          <input
+            type="text"
+            class="w-3/4 border border-black p-1 mb-2 border-2"
+            placeholder="Phone"
+            required
+          />
+          <h2 class="font-medium mt-2 mb-1">Your Notes</h2>
+          <textarea
+            cols="20"
+            rows="5"
+            class="w-3/4 border border-black p-1 mb-4 border-2"
+            required
+          ></textarea>
+          <button
+            type="submit"
+            class="px-4 mt-3 block py-2 bg-blue-800 text-white rounded"
+          >
+            Done
+          </button>
+        </form>
+
+        <div id="thanks" class="hidden">
+          <h2>
+            Thanks for filling in the form. You will be emailed next steps.
+          </h2>
+        </div>
+
+        <div
+          id="myModal"
+          class="hidden fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center"
+          onclick="closeModal()"
+        >
+          <div
+            class="bg-white p-8 rounded-lg w-1/2 h-2/3 relative"
+            onclick="event.stopPropagation()"
+          >
+            <div class="flex items-center justify-between">
+              <h1 class="font-bold">Timezone</h1>
+              <button onclick="closeModal()" class="text-red-500 font-bold">
+                X
+              </button>
+            </div>
+            <div class="flex items-center mr-2 mb-1">
+              <label class="mr-1">AM /</label>
+              <label class="mr-1">PM</label>
+              <input
+                type="checkbox"
+                id="ampmToggle"
+                class="toggle-input mr-1"
+              />
+              <label for="ampmToggle" class="toggle-switch ml-1">24hrs</label>
+            </div>
+            <div
+              id="timezoneCardList"
+              class="flex w-full h-full flex-wrap overflow-auto"
+            ></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.32/moment-timezone-with-data.min.js"></script>
+    <script>
+      // JavaScript functions remain unchanged
+      function openModal() {
+        const modal = document.getElementById("myModal");
+        modal.classList.remove("hidden"); // Remove the 'hidden' class to make the modal visible
+      }
+
+      function closeModal() {
+        const modal = document.getElementById("myModal");
+        modal.classList.add("hidden"); // Add the 'hidden' class to hide the modal
+      }
+
+      function generateTimezones() {
+        const timezoneCardList = document.getElementById("timezoneCardList");
+        const timezones = moment.tz.names(); // Get all timezones
+        timezoneCardList.innerHTML = ""; // Clear existing content
+
+        timezones.forEach((timezone) => {
+          const timezoneCard = document.createElement("div");
+          timezoneCard.className =
+            "p-2 m-2 border rounded cursor-pointer hover:bg-blue-200"; // Styling for the cards
+          timezoneCard.innerHTML = `
+            <div>
+                <span class="font-bold">${timezone}</span>
+                <p class="text-sm text-gray-600">${moment
+                  .tz(timezone)
+                  .format("z")} (${moment.tz(timezone).format("HH:mm")})</p>
+            </div>
+        `;
+          timezoneCard.onclick = () => showTimezone(timezone); // Handle timezone selection
+          timezoneCardList.appendChild(timezoneCard);
+        });
+      }
+
+      function showTimezone(selectedTimezone) {
+        // Set the selected timezone in your span or other UI element
+        const timezoneSpan = document.getElementById("timezoneSpan");
+        timezoneSpan.textContent = selectedTimezone;
+
+        // Close the modal
+        closeModal();
+      }
+
+      function openModal() {
+        const modal = document.getElementById("myModal");
+        modal.classList.remove("hidden");
+        generateTimezones(); // Generate timezones
+      }
+
+      function convertTo24HrFormat(time) {
+        const [hour, minute, period] = time.split(/[: ]/);
+        let adjustedHour = parseInt(hour, 10);
+
+        if (period === "pm" && adjustedHour !== 12) {
+          adjustedHour += 12;
+        } else if (period === "am" && adjustedHour === 12) {
+          adjustedHour = 0;
+        }
+
+        return `${String(adjustedHour).padStart(2, "0")}:${minute}:00`;
+      }
+
+      let currentWeekIndex = 0;
+      let fullScheduleData = [];
+
+   async function fetchDataAndRender() {
+        try {
+          const response = await fetch("/schedule"); // Replace with your API endpoint
+          const sampleData = await response.json();
+
+          if (sampleData?.data) {
+            fullScheduleData = sampleData.data; // Save the complete schedule data
+            displayScheduleTableForWeek(currentWeekIndex); // Render the first week's data
+            setupWeekSwitcher(); // Initialize Prev/Next week buttons
+          } else {
+            console.error("No data returned from API");
+          }
+        } catch (error) {
+          console.error("Error fetching schedule data:", error);
+        }
+      }
+
+      function getWeeklyData(data, weekIndex) {
+        const weekLength = 7; // Days in a week
+        const start = weekIndex * weekLength;
+        return data.slice(start, start + weekLength);
+      }
+
+      function displayScheduleTableForWeek(weekIndex) {
+        const weeklyData = getWeeklyData(fullScheduleData, weekIndex); // Get the current week's data
+        displayScheduleTable(weeklyData);
+      }
+
+      function setupWeekSwitcher() {
+        const prevWeek = document.getElementById("prevWeek");
+        const nextWeek = document.getElementById("nextWeek");
+
+        prevWeek.addEventListener("click", () => {
+          if (currentWeekIndex > 0) {
+            currentWeekIndex -= 1;
+            displayScheduleTableForWeek(currentWeekIndex);
+          }
+        });
+
+        nextWeek.addEventListener("click", () => {
+          const maxWeeks = Math.ceil(fullScheduleData.length / 7);
+          if (currentWeekIndex < maxWeeks - 1) {
+            currentWeekIndex += 1;
+            displayScheduleTableForWeek(currentWeekIndex);
+          }
+        });
+      }
+
+
+function displayScheduleTable(data) {
+  const scheduleTable = document.getElementById("scheduleTable");
+  const switchWeek = document.getElementById("switch");
+
+  if (data?.length) {
+    const tableHead = scheduleTable.querySelector("thead tr");
+    const tableBody = scheduleTable.querySelector("tbody");
+
+    tableHead.innerHTML = "";
+    tableBody.innerHTML = "";
+
+    const uniqueDays = data.map((item) => ({
+      day: item.day,
+      date: item.date,
+      bookedHours: item.bookedHours, // Include booked hours for the day
+    }));
+
+    uniqueDays.forEach(({ day, date }) => {
+      const th = document.createElement("th");
+      th.innerHTML = `<span class="block">${day}<br>${date}</span>`;
+      tableHead.appendChild(th);
+    });
+
+    const startTime = "09:00:00";
+    const endTime = "17:00:00";
+    const timeSlots = generateTimeSlots(startTime, endTime);
+
+    timeSlots.forEach((slot) => {
+      const row = document.createElement("tr");
+      row.className = "h-16";
+
+      uniqueDays.forEach(({ date, bookedHours }) => {
+        const td = document.createElement("td");
+        td.className = "text-center cursor-pointer";
+        td.textContent = slot; // Display the time slot
+
+        // Convert slot to 24-hour format
+        const slotTime24 = convertTo24HrFormat(slot);
+
+        // Check if the slot is booked
+        const isBooked = bookedHours.some(({ startTime, endTime }) => {
+          return slotTime24 >= startTime && slotTime24 <= endTime;
+        });
+
+        if (isBooked) {
+          td.style.backgroundColor = "red"; // Mark as booked
+          td.classList.add("text-white"); // Optional: improve contrast
+        }
+
+        td.onclick = () => {
+          if (!isBooked) showForm(date, slot);
+        };
+        row.appendChild(td);
+      });
+
+      tableBody.appendChild(row);
+    });
+
+    scheduleTable.classList.remove("hidden");
+    switchWeek.classList.remove("hidden");
+  } else {
+    scheduleTable.classList.add("hidden");
+    switchWeek.classList.add("hidden");
+  }
+}
+
+
+      function generateTimeSlots(startTime, endTime) {
+        const slots = [];
+        let currentTime = startTime;
+
+        while (currentTime < endTime) {
+          const [hours, minutes] = currentTime.split(":").map(Number);
+          const date = new Date();
+          date.setHours(hours, minutes);
+          slots.push(
+            date.toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: true,
+            })
+          );
+          date.setMinutes(date.getMinutes() + 60);
+          currentTime = `${String(date.getHours()).padStart(2, "0")}:${String(
+            date.getMinutes()
+          ).padStart(2, "0")}:00`;
+        }
+
+        return slots;
+      }
+
+      // Fetch and render data on page load
+      document.addEventListener("DOMContentLoaded", fetchDataAndRender);
+
+      // Function to show the form when a table row is clicked
+      function showForm(date, time) {
+        const scheduleTable = document.getElementById("scheduleTable");
+        const switchWeek = document.getElementById("switch");
+        const form = document.getElementById("scheduleForm");
+
+        if (form) {
+          form.classList.remove("hidden");
+          scheduleTable.classList.add("hidden");
+          switchWeek.classList.add("hidden");
+
+          // Set the selected date and time as attributes on the form
+          form.setAttribute("data-date", date);
+          form.setAttribute("data-time", time);
+
+          // Display the selected slot in the form (optional)
+          const selectedSlot = form.querySelector("#selectedSlot");
+          if (selectedSlot) {
+            selectedSlot.textContent = `Selected: ${date} ${time}`;
+          }
+        }
+      }
+
+      function calculateEndTime(startTime) {
+        // Parse the start time using moment
+        const startMoment = moment(startTime, "hh:mm A");
+        if (!startMoment.isValid()) {
+          console.error("Invalid start time format");
+          return null;
+        }
+
+        // Add 24 hours to start time
+        const endMoment = startMoment.add(24, "hours");
+        return endMoment.format("hh:mm A"); // Return in a valid 12-hour format
+      }
+
+      // Function to handle form submission (optional, depending on your use case)
+      async function handleSubmit(event) {
+        event.preventDefault();
+        const form = event.target;
+
+        const date = form.getAttribute("data-date");
+        const startTime = form.getAttribute("data-time");
+        const endTime = calculateEndTime(startTime);
+
+        // Here you can handle form data (e.g., sending it to a server)
+        const formData = {
+          fullName: form.querySelector('input[placeholder="Full Name"]').value,
+          email: form.querySelector('input[placeholder="Email"]').value,
+          company: form.querySelector('input[placeholder="Company"]').value,
+          phone: form.querySelector('input[placeholder="Phone"]').value,
+          notes: form.querySelector("textarea").value,
+          date: moment(date).format("YYYY-MM-DD"), // Ensure proper date format
+          startTime: moment(startTime, "hh:mm A").format("HH:mm:ss"), // Format start time to HH:mm:ss
+          endTime: moment(endTime, "hh:mm A").format("HH:mm:ss"), //
+        };
+
+        const response = await fetch("/schedule", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        });
+        const sampleData = await response.json();
+
+        // If the submission was successful, show the "Thanks" message
+        if (response.ok) {
+          // Hide the form
+          form.classList.add("hidden");
+
+          // Unhide the "thanks" div
+          document.getElementById("thanks").classList.remove("hidden");
+        } else {
+          // Handle error (optional)
+          console.error("Error submitting form:", sampleData);
+        }
+      }
+    </script>
+  </body>
+</html>

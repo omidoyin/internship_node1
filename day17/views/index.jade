@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Calendar</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+</head>
+<body>
+    <div class="mx-auto">
+        <div class="bg-blue-800 text-white overflow-hidden shadow-lg">
+            <h2 class="p-3 font-bold text-xl">Calendar</h2>
+            <div class="font-bold text-xl mb-2"></div>
+        </div>
+        <div class="mx-20 py-4">
+            <p class="font-bold">Pick a date and time</p>
+            <p class="font-bold mt-1">Duration: 1 hour</p>
+            <p class="font-medium my-3">Your timezone: 
+                <span onclick="openModal()" id="timezoneSpan" class="font-normal cursor-pointer">please select</span>
+            </p>
+            <hr>
+
+            <div class="flex justify-between hidden items-center mt-4 mb-2" id="switch">
+                <span class="font-medium text-sm cursor-pointer">Prev week</span>
+                <span class="font-medium text-sm cursor-pointer">Next week</span>
+            </div>
+            <table id="scheduleTable" class="hidden mb-4 mt-0 w-full">
+                <thead>
+                    <tr class="table-fixed bg-gray-100 h-20">
+                        <% ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].forEach(day => { %>
+                            <th>
+                                <span class="block"><%= day %></span>
+                                <span class="block font-normal">June 29</span>
+                            </th>
+                        <% }) %>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr onclick="showForm()" class="h-16">
+                        <% for (let i = 0; i < 7; i++) { %>
+                            <td class="text-center">11:30am</td>
+                        <% } %>
+                    </tr>
+                </tbody>
+            </table>
+
+            <form id="scheduleForm" class="hidden my-4 w-full" onsubmit="return handleSubmit(event)">
+                <h1 class="font-bold mt-10 mb-2">Additional information</h1>
+                <h2 class="font-medium mt-2 mb-1">Full Name</h2>
+                <input type="text" class="w-3/4 border border-black p-1 mb-2 border-2" placeholder="Full Name" required>
+                <h2 class="font-medium mt-2 mb-1">Email</h2>
+                <input type="text" class="w-3/4 border border-black p-1 mb-2 border-2" placeholder="Email" required>
+                <h2 class="font-medium mt-2 mb-1">Company</h2>
+                <input type="text" class="w-3/4 border border-black p-1 mb-2 border-2" placeholder="Company" required>
+                <h2 class="font-medium mt-2 mb-1">Phone</h2>
+                <input type="text" class="w-3/4 border border-black p-1 mb-2 border-2" placeholder="Phone" required>
+                <h2 class="font-medium mt-2 mb-1">Your Notes</h2>
+                <textarea cols="20" rows="5" class="w-3/4 border border-black p-1 mb-4 border-2" required></textarea>
+                <button type="submit" class="px-4 mt-3 block py-2 bg-blue-800 text-white rounded">Done</button>
+            </form>
+
+            <div id="thanks" class="hidden">
+                <h2>Thanks for filling in the form. You will be emailed next steps.</h2>
+            </div>
+
+            <div id="myModal" class="hidden fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
+                <div class="bg-white p-8 rounded-lg w-1/2 h-2/3 relative">
+                    <div class="flex items-center justify-between">
+                        <h1 class="font-bold">Timezone</h1>
+                        <div class="flex items-center mr-2 mb-1">
+                            <label class="mr-1">AM /</label>
+                            <label class="mr-1">PM</label>
+                            <input type="checkbox" id="ampmToggle" class="toggle-input mr-1">
+                            <label for="ampmToggle" class="toggle-switch ml-1">24hrs</label>
+                        </div>
+                    </div>
+                    <div id="timezoneCardList" class="flex w-full h-full flex-wrap overflow-auto"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.32/moment-timezone-with-data.min.js"></script>
+    <script>
+        // JavaScript functions remain unchanged
+        function openModal() {
+            // ...
+        }
+        function closeModal() {
+            // ...
+        }
+        function handleSubmit(event) {
+            // ...
+        }
+        async function generateScheduleTable(currentDate) {
+            // ...
+        }
+        function generateTimeSlots(startHour, endHour) {
+            // ...
+        }
+        function groupTimezonesByRegion(timezones) {
+            // ...
+        }
+        function getMeridiem(time) {
+            // ...
+        }
+        function showForm() {
+            // ...
+        }
+        function showForm2() {
+            // ...
+        }
+        function showTimezone(selectedTimezone) {
+            // ...
+        }
+    </script>
+</body>
+</html>
+    

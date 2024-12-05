@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "body-parser": "^1.20.3",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "eta": "^3.5.0",
+    "moment-timezone": "^0.5.46",
+    "nodemon": "^3.1.7",
+    "stripe": "^16.9.0"
+  }
+}

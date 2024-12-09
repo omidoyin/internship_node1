@@ -2,7 +2,7 @@
 const express = require("express");
 const router = express.Router();
 const { User } = require("../models"); // Adjust the path according to your project structure
-const { createWallet, getBalance, transferTokens } = require("../utils");
+const { createWallet, getBalance, transferTokens,signPayload } = require("../utils");
 // const { createWallet, signPayload, getBalance, transferTokens } = require('../utils/walletUtils');
 
 // GET all users

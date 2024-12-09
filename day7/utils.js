@@ -20,6 +20,17 @@ async function getBalance(address) {
   const balance = await alchemy.core.getBalance(address);
   return Utils.formatEther(balance);
 }
+// Example: Signing a payload
+function signPayload(privateKey, payload) {
+  try {
+    const wallet = new Wallet(privateKey);
+    const signedPayload = wallet.signMessage(payload); // Sign the payload
+    return signedPayload;
+  } catch (error) {
+    console.error("Error signing payload:", error);
+    throw new Error("Failed to sign payload");
+  }
+}
 
 // Example: Transferring tokens
 async function transferTokens(privateKey, toAddress, amount) {
@@ -38,4 +49,5 @@ module.exports = {
   createWallet,
   getBalance,
   transferTokens,
+  signPayload
 };

@@ -16,7 +16,7 @@ const { DataTypes } = require('sequelize');
 const config = {
   DB_DATABASE: 'root',
   DB_USERNAME: 'root',
-  DB_PASSWORD: 'root',
+  DB_PASSWORD: 'Omidihoney10',
   DB_ADAPTER: 'mysql',
   DB_NAME: 'root',
   DB_HOSTNAME: 'localhost',

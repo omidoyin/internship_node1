@@ -9,7 +9,7 @@ module.exports=router
 app.use(express.static((path.join(__dirname,"node_modules/fabric"))))
 app.use('/', pagesRoutes)
 
-const port = process.env.PORT || 3001
+const port = process.env.PORT || 3004
 
 app.listen(port,()=>{
     console.log('server is running at http://localhost:'+port);

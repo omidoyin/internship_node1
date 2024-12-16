@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>text</title>
+    <link rel="stylesheet" href="./styles.css">
+    <!-- Include Fabric.js library from CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="nav">
+            <a href="/element">
+                <span class="nav-item">Element</span>
+            </a>
+            <a href="/image">
+                <span class="nav-item">Image</span>
+            </a>
+            <a href="/text">
+                <span class="nav-item">Text</span>
+            </a>
+            <a href="/">
+                <span class="nav-item">Background</span>
+            </a>
+        </div>
+        <div class="text-menu"></div>
+        <div style="padding: 7rem; background-color: lightgray; ">
+            <canvas id="canvas" width="800" height="600"></canvas>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+        const canvas = new fabric.Canvas('canvas')
+        const textMenu = document.querySelector('.text-menu')
+
+        // Create a function to add text elements
+        function createTextButton(label, tag, fontSize) {
+            const button = document.createElement('button');
+            button.innerText = label;
+            button.classList.add('text-button');
+            button.addEventListener('click', () => {
+                const defaultText = new fabric.IText(`Default ${tag} Text`, {
+                left: canvas.width / 2,
+                top: canvas.height / 2,
+                fontSize: fontSize,
+                textAlign: 'center',
+                });
+                canvas.add(defaultText);
+            });
+            return button;
+        }
+
+        // Add H1, H6, and P buttons
+        textMenu.appendChild(createTextButton('Add H1', 'H1', 32));
+        textMenu.appendChild(createTextButton('Add H6', 'H6', 16));
+        textMenu.appendChild(createTextButton('Add Paragraph', 'P', 20));
+
+        const fontSizeDropdown = document.createElement('select');
+        fontSizeDropdown.addEventListener('change', () => {
+            const selectedFontSize = fontSizeDropdown.value;
+            const activeObject = canvas.getActiveObject();
+
+            if (activeObject && activeObject.type === 'i-text') {
+            activeObject.set('fontSize', parseInt(selectedFontSize, 10));
+            canvas.renderAll();
+            }
+        });
+
+        for (let i = 10; i <= 60; i += 10) {
+            const option = document.createElement('option');
+            option.value = i;
+            option.text = `${i}px`;
+            fontSizeDropdown.appendChild(option);
+        }
+
+        textMenu.appendChild(fontSizeDropdown);
+
+        const trashIcon = document.createElement('span');
+        trashIcon.innerHTML = '&#128465;';
+        trashIcon.classList.add('trash-icon');
+        trashIcon.addEventListener('click', () => {
+            const activeObject = canvas.getActiveObject();
+
+            if (activeObject) {
+            canvas.remove(activeObject);
+            }
+        });
+        textMenu.appendChild(trashIcon);
+
+        // Make text editable on click
+        canvas.on('mouse:down', (options) => {
+            if (options.target && options.target.type === 'i-text') {
+                options.target.enterEditing();
+                options.target.hiddenTextarea.focus();
+            }
+        });
+        })
+    </script>
+</body>
+</html>

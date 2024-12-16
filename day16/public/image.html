@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image</title>
+    <link rel="stylesheet" href="./styles.css">
+    <!-- Include Fabric.js library from CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+    <script src="app.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="nav">
+            <a href="/element">
+                <span class="nav-item">Element</span>
+            </a>
+            <a href="/image">
+                <span class="nav-item">Image</span>
+            </a>
+            <a href="/text">
+                <span class="nav-item">Text</span>
+            </a>
+            <a href="/">
+                <span class="nav-item">Background</span>
+            </a>
+        </div>
+        <div class="left-panel"></div>
+        <div style="padding: 7rem; background-color: lightgray; height: 600px; width: 800px;">
+            <canvas id="canvas" width="800" height="600"></canvas>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const leftPanel = document.querySelector('.left-panel')
+            const canvas = new fabric.Canvas('canvas')
+            const picsumUrl = 'https://picsum.photos/v2/list';
+
+            fetch(picsumUrl)
+            .then((response) => response.json())
+            .then((data) => {
+                data.slice(0, 10).forEach((imageData) => {
+                const imageElement = document.createElement('img');
+                imageElement.src = imageData.download_url;
+                imageElement.classList.add('image')
+                imageElement.alt = 'Picsum Image';
+
+                imageElement.addEventListener('click', () => {
+                    fabric.Image.fromURL(imageData.download_url, (img) => {
+                    // Adjust the image to cover the entire canvas
+                    img.set({
+                        left: -30,
+                        top: 0,
+                        scaleX: canvas.width / img.width,
+                        scaleY: canvas.height / img.height,
+                    });
+
+                    canvas.add(img);
+                    });
+                    });
+                    leftPanel.appendChild(imageElement);
+                });
+            })
+            .catch((error) => {
+                console.error('Error fetching images from Picsum:', error);
+            });
+        })
+    </script>
+</body>
+</html>

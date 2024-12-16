@@ -25,6 +25,7 @@ router.get("/", async (req, res) => {
       return res.send({ message: "no product" });
     }
     const pr = await getProducts;
+    
 
     res.render("productList", { products: pr });
   } catch (error) {}

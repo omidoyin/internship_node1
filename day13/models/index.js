@@ -50,8 +50,45 @@ let sequelize = new Sequelize(
     },
   }
 );
+let Products = require("./products")(sequelize, DataTypes);
 
-sequelize.sync({ alter: true });
+const defaultProducts = [
+  {
+    title: "Inception",
+    image: "https://via.placeholder.com/600/771796",
+    description: "A mind-bending heist movie directed by Christopher Nolan.",
+    price: 5,
+    id:1
+  },
+  {
+    title: "Pulp Fiction",
+    image: "https://via.placeholder.com/600/771796",
+    description: "A cult classic crime film directed by Quentin Tarantino.",
+    price: 10,
+    id:2
+  },
+  {
+    title: "Inception 20002",
+    image: "https://via.placeholder.com/600/771796",
+    description: "A mind-bending heist movie directed by Christopher Nolan.",
+    price: 30,
+    id:3
+  },
+  {
+    title: "Pulp Fiction 20002",
+    image: "https://via.placeholder.com/600/771796",
+    description: "A cult classic crime film directed by Quentin Tarantino.",
+    price: 15,
+    id:4
+  },
+];
+
+sequelize.sync({ alter: true })
+// .then(() => {
+//   for (let product of defaultProducts) {
+//     Products.create(product);
+//   }
+// });
 
 fs.readdirSync(__dirname)
   .filter((file) => {

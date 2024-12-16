@@ -11,7 +11,7 @@
 const { app, apollo } = require('./app');
 
 
-const PORT = 3001;
+const PORT = 3004;
 
 app.listen(PORT, () => {
   console.log('Server running at ', true ? `http://localhost:${PORT}` : 'process.env.BASE_URL');

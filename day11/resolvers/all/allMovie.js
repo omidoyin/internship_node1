@@ -48,11 +48,20 @@
 // };
 
 const { Movie } = require("../../models");
-// console.log("Movie", Movie);
 
 module.exports = async() => {
     try {
         const movies = await Movie.findAll(); // Assuming `Movie` is your Sequelize model
+        const dummy =[
+          {
+            id:1,
+            title:"Inception",
+            director_id:1,
+            main_genre:"Action",
+            status:1,
+            review:8.5
+          }
+        ]
         return {
           data: movies.map(movie => movie.toJSON()) // or use movie.dataValues
         };

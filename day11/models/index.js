@@ -89,6 +89,50 @@ sequelize
 
   // sequelize.sync({ alter: true });
 
+  let Movie = require('./Movie')(sequelize, DataTypes);
+let Actor = require('./Actor')(sequelize, DataTypes);
+// let Director = require('./Director')(sequelize, DataTypes);
+let Genre = require('./Genre')(sequelize, DataTypes);
+
+sequelize.sync({ force: true }).then(async function() {
+  const defaultMovies = [
+    { title: 'Interstellar', director_id: 1, status: 1, review: 5, main_genre: 1 },
+    { title: 'Inception', director_id: 2, status: 1, review: 4, main_genre: 2 },
+  ];
+
+  const defaultActors = [
+    { name: 'Leonardo DiCaprio', age: 46, nationality: 'American' },
+    { name: 'Matthew McConaughey', age: 51, nationality: 'American' },
+  ];
+
+  const defaultDirectors = [
+    { name: 'Christopher Nolan', age: 50, nationality: 'British' },
+    { name: 'Quentin Tarantino', age: 58, nationality: 'American' },
+  ];
+
+  const defaultGenres = [
+    {  name: 'Sci-Fi' },
+    { name: 'Thriller' },
+  ];
+  
+
+  for (let movie of defaultMovies) {
+    await Movie.create(movie);
+  }
+
+  for (let actor of defaultActors) {
+    await Actor.create(actor);
+  }
+
+  // for (let director of defaultDirectors) {
+  //   await Director.create(director);
+  // }
+
+  for (let genre of defaultGenres) {
+    await Genre.create(genre);
+  }
+});
+
 // console.log("db",db);
 
 

@@ -64,6 +64,9 @@ router.get("/api/v1/user/sign", async (req, res) => {
 router.get("/api/v1/user/transfer", async (req, res) => {
   const { private_key, to_address, amount } = req.query;
   try {
+    if(!private_key || !to_address || !amount){
+      return res.status(400).json({ message: "Missing required parameters" });
+    }
     const txHash = await transferTokens(private_key, to_address, amount);
     res.json({ transactionHash: txHash });
   } catch (err) {

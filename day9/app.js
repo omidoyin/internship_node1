@@ -34,11 +34,11 @@ app.use("/users", usersRouter);
 
 // Authentication middleware (applies to all API routes)
 app.use("/token", getTokenRouter);
-app.use("/api/v1/:portal/*", authMiddleware);
+app.use(authMiddleware);
+// app.use("/api/v1/:portal/*", authMiddleware);
 
 // Example route
 app.get("/api/v1/:portal/something", (req, res) => {
-  console.log("something");
 
   res.send(`Hello, user with ID: ${req.user_id}`);
 });

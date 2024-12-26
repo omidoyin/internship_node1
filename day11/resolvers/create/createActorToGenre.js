@@ -9,10 +9,8 @@
  *
  */
 const { ApolloError } = require('apollo-server-express');
-const { Genre, MovieActor } = require("../../models");
-// const Genre = require('../models/Genre'); // Adjust path as needed
-// const Movie = require('../models/Movie'); // Adjust path as needed
-// const MovieActor = require('../models/MovieActor'); // Adjust path as needed
+const { Genre, MovieActor,Movie } = require("../../models");
+
 
 module.exports = {
   Mutation: {
@@ -22,17 +20,17 @@ module.exports = {
         if (!genre) {
           throw new ApolloError('Genre not found');
         }
-        
-        const movies = await genre.getMovies();
-        
+
+        const allMovies = await Movie.findAll({where:{main_genre:genre.id}});      
+                           
         await Promise.all(
-          movies.map(async (movie) => {
+          allMovies.map(async (movie) => {
             await MovieActor.create({ movie_id: movie.id, actor_id: actorId });
           })
         );
         console.log("actorId",actorId,genreName);
         
-        return { data: movies.map((movie)=>movie.toJSON())};
+        return { data: allMovies.map((movie)=>movie.toJSON())};
       } catch (error) {
         console.log('addActorToGenreMovies -> error', error);
         throw new ApolloError('InternalServerError');
